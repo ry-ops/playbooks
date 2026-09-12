@@ -1,0 +1,230 @@
+# ============================================================================
+# Mr. Robot — Unlock Playbook : htb-default
+# ----------------------------------------------------------------------------
+# Declares how findings posted to the arcade unlock new tasks on the board.
+# Mr. Robot (the orchestrator) loads this file; the arcade engine executes it.
+# Tuning HackTheBox methodology means editing this file -- not the code.
+#
+# Lifecycle:
+#   seeds  ->  finding posted  ->  matching rule fires  ->  task spawned
+#          ->  task's depends_on satisfied  ->  task goes `ready`
+#
+# Interpolation (usable in `summary` and other string fields):
+#   {box_ip}, {box_name}   -- from the engagement
+#   {data.<field>}         -- from the triggering finding's `data`
+#
+# `priority`  0-100, higher wins when the orchestrator picks the next task.
+# `hat`       references an ADR persona in ~/Mr. Robot/adr/ (white-hat, black-hat, ...).
+# `tools`     advisory only -- the assigned Hat makes the final tool call.
+# `produces`  finding types the task is expected to yield; this powers
+#             data-driven blocker resolution (see Notes at the bottom).
+# ============================================================================
+
+playbook: htb-default
+version: 0.1
+status: draft
+description: >
+  Default HackTheBox methodology -- recon, per-service enumeration, foothold,
+  privilege escalation, and flag capture.
+
+# --- Seed tasks -------------------------------------------------------------
+# Created the moment an engagement starts, before any findings exist.
+seeds:
+  - task: recon.portscan
+    summary: "Full TCP port scan + service/version detection on {box_ip}"
+    priority: 100
+    hat: script-kiddie
+    tools: [nmap, masscan]
+    produces: [port, service]
+
+# --- Unlock rules -----------------------------------------------------------
+# When a posted finding matches `when`, every task under `spawn` is added to the
+# board (skipped if an identical task already exists).
+rules:
+
+  - id: service-to-enum
+    description: Any identified service gets a dedicated enumeration task.
+    when:
+      type: service
+    spawn:
+      - task: enum.service
+        summary: "Enumerate {data.service} on port {data.port}"
+        priority: 70
+        hat: white-hat
+        produces: [web_path, credential, cve, foothold]
+
+  - id: web-service-to-web-enum
+    description: HTTP/HTTPS services get content discovery + vuln scanning.
+    when:
+      type: service
+      match:
+        service: [http, https, http-proxy, http-alt]
+    spawn:
+      - task: enum.web.content
+        summary: "Directory & content discovery on {data.url}"
+        priority: 75
+        hat: white-hat
+        tools: [feroxbuster, ffuf, whatweb]
+        produces: [web_path]
+      - task: enum.web.vulns
+        summary: "Web vulnerability scan of {data.url}"
+        priority: 65
+        hat: script-kiddie
+        tools: [nikto, nuclei]
+        produces: [cve, web_path]
+
+  - id: web-path-to-investigate
+    description: Notable web paths (login, upload, admin, api) get a close look.
+    when:
+      type: web_path
+      match:
+        interesting: true
+    spawn:
+      - task: enum.web.path
+        summary: "Investigate web path {data.path} on {data.url}"
+        priority: 72
+        hat: white-hat
+        produces: [credential, cve, foothold]
+
+  - id: cve-to-exploit
+    description: A matched CVE gets an exploitation task on the exploit-first Hat.
+    when:
+      type: cve
+    spawn:
+      - task: exploit.cve
+        summary: "Exploit {data.cve_id} against {data.target}"
+        priority: 90
+        hat: black-hat
+        tools: [searchsploit, msfconsole]
+        produces: [foothold, credential]
+
+  - id: credential-to-access
+    description: Discovered credentials are validated across known services.
+    when:
+      type: credential
+    spawn:
+      - task: access.validate-creds
+        summary: "Test credential '{data.username}' across discovered services"
+        priority: 85
+        hat: black-hat
+        tools: [netexec, hydra, evil-winrm]
+        produces: [foothold]
+
+  - id: foothold-to-privesc
+    description: A shell unlocks privesc enumeration and the user-flag hunt.
+    when:
+      type: foothold
+    spawn:
+      - task: privesc.enum
+        summary: "Privilege-escalation enumeration on {data.source} as {data.user}"
+        priority: 80
+        hat: white-hat
+        produces: [privesc_vector]
+      - task: loot.user-flag
+        summary: "Locate and capture user.txt on {data.source}"
+        priority: 95
+        hat: red-team
+        produces: [flag]
+
+  - id: foothold-to-post-ex
+    description: >
+      Landing a shell fires the full post-exploitation battery. Each action runs
+      via shell_post_ex and posts an edr_verdict finding (permitted/blocked).
+    when:
+      type: foothold
+    spawn:
+      - task: post_ex.process_enum
+        summary: "Enumerate running processes on {data.source}"
+        priority: 78
+        hat: purple-hat
+        produces: [edr_verdict]
+      - task: post_ex.sudo_check
+        summary: "Check sudo privileges on {data.source} as {data.user}"
+        priority: 82
+        hat: purple-hat
+        produces: [privesc_vector, edr_verdict]
+      - task: post_ex.suid_search
+        summary: "Find SUID binaries on {data.source}"
+        priority: 76
+        hat: purple-hat
+        produces: [privesc_vector, edr_verdict]
+      - task: post_ex.cron_enum
+        summary: "Enumerate cron jobs on {data.source}"
+        priority: 72
+        hat: purple-hat
+        produces: [privesc_vector, edr_verdict]
+      - task: post_ex.network_enum
+        summary: "Enumerate network interfaces and listeners on {data.source}"
+        priority: 70
+        hat: purple-hat
+        produces: [edr_verdict]
+      - task: post_ex.history_dump
+        summary: "Extract shell history on {data.source}"
+        priority: 71
+        hat: purple-hat
+        produces: [credential, edr_verdict]
+      - task: post_ex.env_dump
+        summary: "Dump environment variables on {data.source}"
+        priority: 74
+        hat: purple-hat
+        produces: [credential, edr_verdict]
+      - task: post_ex.credential_search
+        summary: "Search for credential files on {data.source}"
+        priority: 86
+        hat: purple-hat
+        produces: [credential, edr_verdict]
+      - task: post_ex.cloud_metadata
+        summary: "Query cloud metadata endpoints from {data.source}"
+        priority: 80
+        hat: purple-hat
+        produces: [credential, edr_verdict]
+      - task: post_ex.shadow_read
+        summary: "Attempt /etc/shadow read on {data.source}"
+        priority: 84
+        hat: purple-hat
+        produces: [credential, edr_verdict]
+
+  - id: edr-verdict-to-harvest
+    description: >
+      A permitted high-value post-ex action means live secrets are on the box.
+      Spawn a harvest task to pull them into loot/.
+    when:
+      type: edr_verdict
+      match:
+        verdict: permitted
+        action: [credential_search, shadow_read, env_dump, history_dump]
+    spawn:
+      - task: loot.harvest-credentials
+        summary: "Harvest credentials exposed by {data.action} on {data.source}"
+        priority: 88
+        hat: white-hat
+        produces: [credential]
+
+  - id: privesc-vector-to-root
+    description: A privesc vector unlocks exploitation and the root-flag hunt.
+    when:
+      type: privesc_vector
+    spawn:
+      - task: privesc.exploit
+        summary: "Exploit privilege-escalation vector: {data.summary}"
+        priority: 92
+        hat: black-hat
+        produces: [foothold]
+      - task: loot.root-flag
+        summary: "Locate and capture root.txt on {data.host}"
+        priority: 99
+        hat: red-team
+        depends_on:
+          type: foothold
+          match: { privilege: root }
+        produces: [flag]
+
+# --- Notes ------------------------------------------------------------------
+# `flag` findings are terminal: the engine records them on the engagement and
+#   closes related loot tasks. No rule should spawn work from a `flag`.
+#
+# Blocker resolution is data-driven from `produces`: when a robot reports a
+#   blocker whose `resolved_by` finding type is not yet on the board, the engine
+#   spawns (or boosts the priority of) the task template whose `produces`
+#   includes that type. The blocker becomes a demand signal automatically --
+#   no separate "how do I get X" mapping needs to be declared.
