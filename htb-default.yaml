@@ -36,6 +36,7 @@ seeds:
     hat: script-kiddie
     tools: [nmap, masscan]
     produces: [port, service]
+    skills: [tooling/nmap, reconnaissance/asset_discovery]
 
 # --- Unlock rules -----------------------------------------------------------
 # When a posted finding matches `when`, every task under `spawn` is added to the
@@ -52,6 +53,7 @@ rules:
         priority: 70
         hat: white-hat
         produces: [web_path, credential, cve, foothold]
+        skills: [tooling/nmap, tooling/httpx, technologies/active_directory]
 
   - id: web-service-to-web-enum
     description: HTTP/HTTPS services get content discovery + vuln scanning.
@@ -66,12 +68,14 @@ rules:
         hat: white-hat
         tools: [feroxbuster, ffuf, whatweb]
         produces: [web_path]
+        skills: [tooling/ffuf, tooling/katana, tooling/httpx, reconnaissance/asset_discovery]
       - task: enum.web.vulns
         summary: "Web vulnerability scan of {data.url}"
         priority: 65
         hat: script-kiddie
         tools: [nikto, nuclei]
         produces: [cve, web_path]
+        skills: [tooling/nuclei, vulnerabilities/information_disclosure]
 
   - id: web-path-to-investigate
     description: Notable web paths (login, upload, admin, api) get a close look.
@@ -85,6 +89,7 @@ rules:
         priority: 72
         hat: white-hat
         produces: [credential, cve, foothold]
+        skills: [vulnerabilities/idor, vulnerabilities/ssrf, vulnerabilities/xss, vulnerabilities/sql_injection, vulnerabilities/authentication_jwt, vulnerabilities/insecure_file_uploads, analysis/counterevidence]
 
   - id: cve-to-exploit
     description: A matched CVE gets an exploitation task on the exploit-first Hat.
@@ -97,6 +102,7 @@ rules:
         hat: black-hat
         tools: [searchsploit, msfconsole]
         produces: [foothold, credential]
+        skills: [vulnerabilities/rce, vulnerabilities/insecure_deserialization, vulnerabilities/ssti, analysis/severity_calibration]
 
   - id: credential-to-access
     description: Discovered credentials are validated across known services.
@@ -109,6 +115,7 @@ rules:
         hat: black-hat
         tools: [netexec, hydra, evil-winrm]
         produces: [foothold]
+        skills: [vulnerabilities/weak_password_detection, technologies/active_directory, vulnerabilities/authentication_jwt]
 
   - id: foothold-to-privesc
     description: A shell unlocks privesc enumeration and the user-flag hunt.
@@ -120,6 +127,7 @@ rules:
         priority: 80
         hat: white-hat
         produces: [privesc_vector]
+        skills: [vulnerabilities/information_disclosure, vulnerabilities/rce, analysis/source_aware_discovery]
       - task: loot.user-flag
         summary: "Locate and capture user.txt on {data.source}"
         priority: 95
@@ -173,11 +181,13 @@ rules:
         priority: 86
         hat: purple-hat
         produces: [credential, edr_verdict]
+        skills: [vulnerabilities/information_disclosure]
       - task: post_ex.cloud_metadata
         summary: "Query cloud metadata endpoints from {data.source}"
         priority: 80
         hat: purple-hat
         produces: [credential, edr_verdict]
+        skills: [cloud/aws, cloud/azure, cloud/gcp, vulnerabilities/ssrf]
       - task: post_ex.shadow_read
         summary: "Attempt /etc/shadow read on {data.source}"
         priority: 84
@@ -199,6 +209,7 @@ rules:
         priority: 88
         hat: white-hat
         produces: [credential]
+        skills: [vulnerabilities/information_disclosure, vulnerabilities/weak_password_detection]
 
   - id: privesc-vector-to-root
     description: A privesc vector unlocks exploitation and the root-flag hunt.
@@ -210,6 +221,7 @@ rules:
         priority: 92
         hat: black-hat
         produces: [foothold]
+        skills: [vulnerabilities/rce, vulnerabilities/argument_injection, analysis/counterevidence]
       - task: loot.root-flag
         summary: "Locate and capture root.txt on {data.host}"
         priority: 99
