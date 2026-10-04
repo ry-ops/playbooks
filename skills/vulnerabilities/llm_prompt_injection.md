@@ -19,6 +19,8 @@ Load `llm_applications` for the full OWASP 2026 LLM01-LLM10 architecture and cov
 
 When the system can invoke MCP servers, plugins, skills, delegated agents, or consequential tools, also load `agentic_system_security` to model effective authority, target-side authorization, executable component supply chain, and repeatable safety regression. This skill remains focused on instruction/data confusion and unsafe model output.
 
+For a machine-walkable attack matrix — **intents × techniques × evasions × outcomes** (authority impersonation, delimiter breakout, base64/homoglyph/zero-width evasions, and the rest), after the public Arcanum taxonomy — load `../taxonomy/prompt_injection_taxonomy.yaml`. Walk its cells to drive coverage instead of re-deriving the attack space per engagement; it also carries the non-determinism retry counts used in Validation below.
+
 ## Before You Start (Memory)
 
 Call `memory_recall_for_task` with queries like:
@@ -221,7 +223,7 @@ curl -s -X POST https://target.com/api/chat \
 2. For indirect injection, demonstrate the trigger via normal user action (e.g., "summarize this URL")
 3. Prove real impact, not just words: an accepted tool action, unauthorized record, downstream injection, external request, or corrupted protected decision
 4. Capture the rendered sink (DOM, outbound request, tool invocation log) as evidence
-5. Run matched baseline/adversarial trials and record attempts and successes; a stochastic bypass can be real without succeeding every time
+5. Run matched baseline/adversarial trials and record attempts and successes; a stochastic bypass can be real without succeeding every time. LLM targets are non-deterministic — run each payload **10 times** (5 quick / 15 thorough) before calling a true or false positive, and report the success ratio, not a single run. The attempt counts live in `../taxonomy/prompt_injection_taxonomy.yaml` (`attempts`)
 
 ## False Positives
 
