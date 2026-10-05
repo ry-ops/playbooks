@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" width="960" height="400" role="img" aria-labelledby="t d">
+  <title id="t">The skills library — 63 reference notes</title>
+  <desc id="d">Sixty-three reference notes grouped into nine categories: vulnerabilities (29), tooling (10), technologies (7), analysis (4), cloud (4), frameworks (4), protocols (2), reconnaissance (2) and taxonomy (1). Tasks cite the skills they need.</desc>
+  <defs><linearGradient id="title" x1="0" x2="1"><stop offset="0" stop-color="#e01e5a"/><stop offset="1" stop-color="#ff9b3d"/></linearGradient></defs>
+  <style>
+    text { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; fill:#f0eef2; }
+    .muted { fill:#9a94a6; }
+    @keyframes g0 { 0%,2.50% { opacity:0; transform:translateY(8px) } 10.00%,100% { opacity:1; transform:translateY(0) } } .g0 { animation:g0 8.0s infinite; }
+    @keyframes g1 { 0%,5.00% { opacity:0; transform:translateY(8px) } 12.50%,100% { opacity:1; transform:translateY(0) } } .g1 { animation:g1 8.0s infinite; }
+    @keyframes g2 { 0%,7.50% { opacity:0; transform:translateY(8px) } 15.00%,100% { opacity:1; transform:translateY(0) } } .g2 { animation:g2 8.0s infinite; }
+    @keyframes g3 { 0%,10.00% { opacity:0; transform:translateY(8px) } 17.50%,100% { opacity:1; transform:translateY(0) } } .g3 { animation:g3 8.0s infinite; }
+    @keyframes g4 { 0%,12.50% { opacity:0; transform:translateY(8px) } 20.00%,100% { opacity:1; transform:translateY(0) } } .g4 { animation:g4 8.0s infinite; }
+    @keyframes g5 { 0%,15.00% { opacity:0; transform:translateY(8px) } 22.50%,100% { opacity:1; transform:translateY(0) } } .g5 { animation:g5 8.0s infinite; }
+    @keyframes g6 { 0%,17.50% { opacity:0; transform:translateY(8px) } 25.00%,100% { opacity:1; transform:translateY(0) } } .g6 { animation:g6 8.0s infinite; }
+    @keyframes g7 { 0%,20.00% { opacity:0; transform:translateY(8px) } 27.50%,100% { opacity:1; transform:translateY(0) } } .g7 { animation:g7 8.0s infinite; }
+    @keyframes g8 { 0%,22.50% { opacity:0; transform:translateY(8px) } 30.00%,100% { opacity:1; transform:translateY(0) } } .g8 { animation:g8 8.0s infinite; }
+    @media (prefers-reduced-motion: reduce) { * { animation:none !important; opacity:1 !important; transform:none !important; } }
+  </style>
+  <rect width="960" height="400" rx="20" fill="#120e14"/>
+  <text x="40" y="54" font-size="26" font-weight="800" style="fill:url(#title)">63 skill notes, 9 categories</text>
+  <text x="42" y="80" font-size="14" class="muted">Reference knowledge each task can cite — grep-able, versioned, editable.</text>
+  <g class="g0"><rect x="40" y="118" width="275" height="74" rx="11" fill="#1a141d" stroke="#e01e5a" stroke-opacity=".5"/>
+  <circle cx="58" cy="144" r="5" fill="#e01e5a"/>
+  <text x="72" y="149" font-size="14.5" font-weight="800">vulnerabilities</text>
+  <text x="299" y="149" text-anchor="end" font-size="15" font-weight="800" style="fill:#e01e5a">29</text>
+  <text x="58" y="174" font-size="10.5" class="muted">xss · ssrf · rce · idor · xxe · sqli · ssti …</text></g><g class="g1"><rect x="333" y="118" width="275" height="74" rx="11" fill="#1a141d" stroke="#ff7a4d" stroke-opacity=".5"/>
+  <circle cx="351" cy="144" r="5" fill="#ff7a4d"/>
+  <text x="365" y="149" font-size="14.5" font-weight="800">tooling</text>
+  <text x="592" y="149" text-anchor="end" font-size="15" font-weight="800" style="fill:#ff7a4d">10</text>
+  <text x="351" y="174" font-size="10.5" class="muted">nmap · nuclei · ffuf · sqlmap · httpx …</text></g><g class="g2"><rect x="626" y="118" width="275" height="74" rx="11" fill="#1a141d" stroke="#ff9b3d" stroke-opacity=".5"/>
+  <circle cx="644" cy="144" r="5" fill="#ff9b3d"/>
+  <text x="658" y="149" font-size="14.5" font-weight="800">technologies</text>
+  <text x="885" y="149" text-anchor="end" font-size="15" font-weight="800" style="fill:#ff9b3d">7</text>
+  <text x="644" y="174" font-size="10.5" class="muted">active directory · firebase · supabase …</text></g><g class="g3"><rect x="40" y="208" width="275" height="74" rx="11" fill="#1a141d" stroke="#f5c542" stroke-opacity=".5"/>
+  <circle cx="58" cy="234" r="5" fill="#f5c542"/>
+  <text x="72" y="239" font-size="14.5" font-weight="800">analysis</text>
+  <text x="299" y="239" text-anchor="end" font-size="15" font-weight="800" style="fill:#f5c542">4</text>
+  <text x="58" y="264" font-size="10.5" class="muted">severity calibration · counterevidence …</text></g><g class="g4"><rect x="333" y="208" width="275" height="74" rx="11" fill="#1a141d" stroke="#43c777" stroke-opacity=".5"/>
+  <circle cx="351" cy="234" r="5" fill="#43c777"/>
+  <text x="365" y="239" font-size="14.5" font-weight="800">cloud</text>
+  <text x="592" y="239" text-anchor="end" font-size="15" font-weight="800" style="fill:#43c777">4</text>
+  <text x="351" y="264" font-size="10.5" class="muted">aws · azure · gcp · kubernetes</text></g><g class="g5"><rect x="626" y="208" width="275" height="74" rx="11" fill="#1a141d" stroke="#22d3ee" stroke-opacity=".5"/>
+  <circle cx="644" cy="234" r="5" fill="#22d3ee"/>
+  <text x="658" y="239" font-size="14.5" font-weight="800">frameworks</text>
+  <text x="885" y="239" text-anchor="end" font-size="15" font-weight="800" style="fill:#22d3ee">4</text>
+  <text x="644" y="264" font-size="10.5" class="muted">django · fastapi · nestjs · nextjs</text></g><g class="g6"><rect x="40" y="298" width="275" height="74" rx="11" fill="#1a141d" stroke="#5aa0ff" stroke-opacity=".5"/>
+  <circle cx="58" cy="324" r="5" fill="#5aa0ff"/>
+  <text x="72" y="329" font-size="14.5" font-weight="800">protocols</text>
+  <text x="299" y="329" text-anchor="end" font-size="15" font-weight="800" style="fill:#5aa0ff">2</text>
+  <text x="58" y="354" font-size="10.5" class="muted">graphql · oauth</text></g><g class="g7"><rect x="333" y="298" width="275" height="74" rx="11" fill="#1a141d" stroke="#a071ff" stroke-opacity=".5"/>
+  <circle cx="351" cy="324" r="5" fill="#a071ff"/>
+  <text x="365" y="329" font-size="14.5" font-weight="800">reconnaissance</text>
+  <text x="592" y="329" text-anchor="end" font-size="15" font-weight="800" style="fill:#a071ff">2</text>
+  <text x="351" y="354" font-size="10.5" class="muted">asset discovery · infra lifecycle</text></g><g class="g8"><rect x="626" y="298" width="275" height="74" rx="11" fill="#1a141d" stroke="#ec4899" stroke-opacity=".5"/>
+  <circle cx="644" cy="324" r="5" fill="#ec4899"/>
+  <text x="658" y="329" font-size="14.5" font-weight="800">taxonomy</text>
+  <text x="885" y="329" text-anchor="end" font-size="15" font-weight="800" style="fill:#ec4899">1</text>
+  <text x="644" y="354" font-size="10.5" class="muted">prompt-injection taxonomy</text></g>
+</svg>
