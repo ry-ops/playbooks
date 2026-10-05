@@ -16,6 +16,7 @@ Configuration and reference notes for [mr-robot](https://github.com/ry-ops/mr-ro
 | [`frameworks/`](skills/frameworks/) | 4 |
 | [`protocols/`](skills/protocols/) | 2 |
 | [`reconnaissance/`](skills/reconnaissance/) | 2 |
+| [`taxonomy/`](skills/taxonomy/) | 1 |
 | [`technologies/`](skills/technologies/) | 7 |
 | [`tooling/`](skills/tooling/) | 10 |
 | [`vulnerabilities/`](skills/vulnerabilities/) | 29 |
